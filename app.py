@@ -5,8 +5,9 @@ from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
-# Load pickle model relative to the current file location
-MODEL_PATH = os.path.join(os.path.dirname(__file__), "..", "logistic.pkl")
+# Absolute path resolution for Vercel serverless environment
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+MODEL_PATH = os.path.join(BASE_DIR, "logistic.pkl")
 
 model = None
 if os.path.exists(MODEL_PATH):
@@ -123,10 +124,9 @@ def home():
 @app.route("/predict", methods=["POST"])
 def predict():
     if model is None:
-        return render_template_string(HTML_TEMPLATE, error="Model file not loaded successfully.")
+        return render_template_string(HTML_TEMPLATE, error="Model file (logistic.pkl) not found on server.")
 
     try:
-        # Collect and order features exactly as trained
         feature_order = [
             'attendance', 'study_hours', 'past_failures', 'assignments_completed_pct',
             'parental_education', 'family_income', 'extracurricular', 'internet_access',
@@ -140,5 +140,5 @@ def predict():
     except Exception as e:
         return render_template_string(HTML_TEMPLATE, error=str(e))
 
-# Entry point for Vercel WSGI
-app = app
+if __name__ == "__main__":
+    app.run(debug=True)
