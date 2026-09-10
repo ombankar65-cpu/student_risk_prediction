@@ -1,11 +1,10 @@
 import os
 import pickle
-import numpy as np
 from flask import Flask, request, render_template_string
 
 app = Flask(__name__)
 
-# Absolute path resolution for Vercel serverless environment
+# Absolute path resolution for model loading
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 MODEL_PATH = os.path.join(BASE_DIR, "logistic.pkl")
 
@@ -141,4 +140,4 @@ def predict():
         return render_template_string(HTML_TEMPLATE, error=str(e))
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(host="0.0.0.0", port=5000)
