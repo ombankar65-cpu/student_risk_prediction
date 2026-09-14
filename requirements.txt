@@ -1,4 +1,6 @@
-Flask
+fastapi
+uvicorn
 scikit-learn
 numpy
-gunicorn
+pydantic
+jinja2
